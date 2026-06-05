@@ -1,0 +1,6 @@
+{
+  "name": "World Cup 2026 Quiniela",
+  "description": "Predicciones y resultados en vivo para el mundial",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

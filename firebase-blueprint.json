@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile including prediction points.",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "points": { "type": "number" },
+        "fcmTokens": { "type": "array" },
+        "isAdmin": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["email", "points", "createdAt"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "World Cup 2026 match schedule and results.",
+      "type": "object",
+      "properties": {
+        "homeTeam": { "type": "string" },
+        "awayTeam": { "type": "string" },
+        "homeFlag": { "type": "string" },
+        "awayFlag": { "type": "string" },
+        "date": { "type": "string" },
+        "homeScore": { "type": "number" },
+        "awayScore": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "finished"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["homeTeam", "awayTeam", "date", "status", "createdAt"]
+    },
+    "Prediction": {
+      "title": "Prediction",
+      "description": "User match prediction.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "matchId": { "type": "string" },
+        "predictedHomeScore": { "type": "number" },
+        "predictedAwayScore": { "type": "number" },
+        "pointsEarned": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "matchId", "predictedHomeScore", "predictedAwayScore", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles. Anyone can read, only users can update their profile. Admins can update admin status."
+    },
+    "/matches/{matchId}": {
+      "schema": { "$ref": "#/entities/Match" },
+      "description": "Match data. Anyone can read, only admins can write."
+    },
+    "/predictions/{predictionId}": {
+      "schema": { "$ref": "#/entities/Prediction" },
+      "description": "User predictions. Owner can create/update before match starts. Admins can update points."
+    }
+  }
+}
