@@ -20,7 +20,7 @@ service cloud.firestore {
       return data.keys().hasAll(isCreate ? ['email', 'points', 'createdAt'] : [])
         && data.email is string && data.email.size() <= 100
         && data.points is number
-        && (isCreate ? data.createdAt == request.time : true);
+        && (isCreate ? data.createdAt is string : true);
     }
 
     match /users/{userId} {
@@ -34,7 +34,7 @@ service cloud.firestore {
       allow update: if isOwner(userId)
         && isValidUser(incoming(), false)
         && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'fcmTokens', 'updatedAt'])
-        && incoming().updatedAt == request.time
+        && incoming().updatedAt is string
         || isAdmin();
 
       allow delete: if isAdmin();
@@ -54,7 +54,7 @@ service cloud.firestore {
         && data.predictedHomeScore >= 0 && data.predictedHomeScore <= 50
         && data.predictedAwayScore >= 0 && data.predictedAwayScore <= 50
         && (!('pointsEarned' in data) || data.pointsEarned == 0 || isAdmin())
-        && (isCreate ? data.createdAt == request.time : true);
+        && (isCreate ? data.createdAt is string : true);
     }
 
     match /predictions/{predictionId} {
@@ -75,7 +75,7 @@ service cloud.firestore {
         && incoming().matchId == existing().matchId
         && isValidPrediction(incoming(), false)
         && incoming().diff(existing()).affectedKeys().hasOnly(['predictedHomeScore', 'predictedAwayScore', 'updatedAt'])
-        && incoming().updatedAt == request.time
+        && incoming().updatedAt is string
         && get(/databases/$(database)/documents/matches/$(incoming().matchId)).data.status == 'pending'
         || isAdmin(); 
 
