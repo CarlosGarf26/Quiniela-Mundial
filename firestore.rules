@@ -19,7 +19,7 @@ service cloud.firestore {
     function isValidUser(data, isCreate) {
       return data.keys().hasAll(isCreate ? ['email', 'points', 'createdAt'] : [])
         && data.email is string && data.email.size() <= 100
-        && data.points is number
+        && data.points is int
         && (isCreate ? data.createdAt is string : true);
     }
 
@@ -49,8 +49,8 @@ service cloud.firestore {
       return data.keys().hasAll(isCreate ? ['userId', 'matchId', 'predictedHomeScore', 'predictedAwayScore', 'createdAt'] : [])
         && data.userId is string && data.userId == request.auth.uid
         && data.matchId is string
-        && data.predictedHomeScore is number
-        && data.predictedAwayScore is number
+        && data.predictedHomeScore is int
+        && data.predictedAwayScore is int
         && data.predictedHomeScore >= 0 && data.predictedHomeScore <= 50
         && data.predictedAwayScore >= 0 && data.predictedAwayScore <= 50
         && (!('pointsEarned' in data) || data.pointsEarned == 0 || isAdmin())

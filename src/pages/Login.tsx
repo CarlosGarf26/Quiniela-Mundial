@@ -41,10 +41,11 @@ export function Login() {
     } catch (err: any) {
       console.error(err);
       const errorCode = err.code || (err.message && err.message.match(/\((auth\/[^)]+)\)/)?.[1]);
-      if (errorCode) {
+      if (errorCode && errorCode.startsWith('auth/')) {
         setError(mapAuthErrorToSpanish(errorCode));
       } else {
-        setError(err.message || 'Error al iniciar sesión');
+        const details = err.code ? `[${err.code}] ${err.message}` : err.message;
+        setError(details || 'Error al iniciar sesión');
       }
     } finally {
       setLoading(false);
@@ -77,10 +78,11 @@ export function Login() {
     } catch (err: any) {
       console.error(err);
       const errorCode = err.code || (err.message && err.message.match(/\((auth\/[^)]+)\)/)?.[1]);
-      if (errorCode) {
+      if (errorCode && errorCode.startsWith('auth/')) {
         setError(mapAuthErrorToSpanish(errorCode));
       } else {
-        setError(err.message || 'Error al iniciar sesión con Google');
+        const details = err.code ? `[${err.code}] ${err.message}` : err.message;
+        setError(details || 'Error al iniciar sesión con Google');
       }
     } finally {
       setLoading(false);
