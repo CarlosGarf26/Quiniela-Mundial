@@ -54,6 +54,7 @@ service cloud.firestore {
         && data.predictedHomeScore >= 0 && data.predictedHomeScore <= 50
         && data.predictedAwayScore >= 0 && data.predictedAwayScore <= 50
         && (!('pointsEarned' in data) || data.pointsEarned == 0 || isAdmin())
+        && (!('isDefinitive' in data) || data.isDefinitive is bool)
         && (isCreate ? data.createdAt is string : true);
     }
 
@@ -68,18 +69,21 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/matches/$(incoming().matchId))
         && get(/databases/$(database)/documents/matches/$(incoming().matchId)).data.status == 'pending';
 
-      // Update allowed only if match is pending (unless admin updating points)
+      // Update allowed only if match is pending and existing prediction is not definitive (unless admin updating points)
       allow update: if isOwner(existing().userId)
         && isOwner(incoming().userId)
         && incoming().userId == existing().userId
         && incoming().matchId == existing().matchId
         && isValidPrediction(incoming(), false)
-        && incoming().diff(existing()).affectedKeys().hasOnly(['predictedHomeScore', 'predictedAwayScore', 'updatedAt'])
+        && (!('isDefinitive' in existing()) || existing().isDefinitive == false)
+        && incoming().diff(existing()).affectedKeys().hasOnly(['predictedHomeScore', 'predictedAwayScore', 'isDefinitive', 'updatedAt'])
         && incoming().updatedAt is string
         && get(/databases/$(database)/documents/matches/$(incoming().matchId)).data.status == 'pending'
         || isAdmin(); 
 
-      allow delete: if isOwner(existing().userId) && get(/databases/$(database)/documents/matches/$(existing().matchId)).data.status == 'pending'
+      allow delete: if isOwner(existing().userId) 
+        && (!('isDefinitive' in existing()) || existing().isDefinitive == false)
+        && get(/databases/$(database)/documents/matches/$(existing().matchId)).data.status == 'pending'
         || isAdmin();
     }
   }

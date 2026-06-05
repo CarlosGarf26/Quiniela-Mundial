@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { Dashboard } from './pages/Dashboard';
@@ -7,7 +8,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Layout } from './components/Layout';
 
-function ProtectedRoute({ children, requireAdmin }: { children: React.ReactNode, requireAdmin?: boolean }) {
+function ProtectedRoute({ children, requireAdmin }: { children: ReactNode, requireAdmin?: boolean }) {
   const { user, isAdmin, loading } = useAuth();
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;

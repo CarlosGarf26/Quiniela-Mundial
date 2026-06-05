@@ -43,6 +43,7 @@
         "predictedHomeScore": { "type": "number" },
         "predictedAwayScore": { "type": "number" },
         "pointsEarned": { "type": "number" },
+        "isDefinitive": { "type": "boolean" },
         "createdAt": { "type": "string" },
         "updatedAt": { "type": "string" }
       },

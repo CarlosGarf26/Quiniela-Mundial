@@ -28,4 +28,5 @@ export interface Prediction {
   predictedHomeScore: number;
   predictedAwayScore: number;
   pointsEarned?: number;
+  isDefinitive?: boolean;
 }

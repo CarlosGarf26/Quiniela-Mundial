@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { collection, query, orderBy, onSnapshot, doc, setDoc, updateDoc, getDocs, writeBatch, where } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { Match, MatchStatus, Prediction, UserProfile } from '../types';
@@ -20,7 +20,7 @@ export function AdminPanel() {
     return () => unsubMatches();
   }, []);
 
-  const handleCreateMatch = async (e: React.FormEvent) => {
+  const handleCreateMatch = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -147,7 +147,7 @@ export function AdminPanel() {
   );
 }
 
-function AdminMatchRow({ match, onFinalize }: { match: Match, onFinalize: (id: string, h: number, a: number) => void }) {
+function AdminMatchRow({ match, onFinalize }: { match: Match, onFinalize: (id: string, h: number, a: number) => Promise<void> | void, key?: any }) {
     const [h, setH] = useState(match.homeScore?.toString() || '');
     const [a, setA] = useState(match.awayScore?.toString() || '');
 
